@@ -1,0 +1,118 @@
+<!-- Header -->
+<header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center py-4">
+      <!-- لوگو -->
+      <div class="flex items-center">
+        <span class="text-2xl">🏛️</span>
+        <h1 class="ml-2 text-xl font-semibold text-emerald-600">
+          E-Gov Portal
+        </h1>
+      </div>
+
+      <!-- Navbar -->
+      <nav
+        id="navbar"
+        class="hidden lg:flex justify-center gap-8 text-sm font-medium flex-1"
+      >
+        <a href="/" class="text-gray-800 hover:text-emerald-600">Home</a>
+        <a href="#services" class="text-gray-800 hover:text-emerald-600"
+          >Services</a
+        >
+        <a href="#how-it-works" class="text-gray-800 hover:text-emerald-600"
+          >How it Works</a
+        >
+        <a
+          href="#news"
+          class="text-gray-800 hover:text-emerald-600 flex items-center"
+        >
+          News & Alerts
+          <span
+            class="bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center ml-1"
+            >!</span
+          >
+        </a>
+        <a href="#support" class="text-gray-800 hover:text-emerald-600"
+          >Support</a
+        >
+      </nav>
+
+      <div class="hidden lg:flex items-center space-x-4">
+        <% if (typeof user !== 'undefined' && user) { %>
+        <span class="text-sm"><%= user.name %></span>
+        <button class="text-gray-500 relative">
+          🔔
+          <span
+            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center"
+            >3</span
+          >
+        </button>
+        <% } else { %>
+        <a href="/login" class="text-emerald-600 hover:underline text-sm"
+          >Sign in</a
+        >
+        <span class="text-gray-300">|</span>
+        <a href="/register" class="text-emerald-600 hover:underline text-sm"
+          >Register</a
+        >
+        <% } %>
+      </div>
+
+      <!-- دکمه همبرگر موبایل -->
+      <button
+        id="menu-btn"
+        class="lg:hidden text-gray-700 hover:text-emerald-600 text-2xl"
+      >
+        ☰
+      </button>
+    </div>
+  </div>
+</header>
+<!-- Menu For Mobile -->
+<nav
+  id="mobile-menu"
+  class="hidden bg-white border-t border-gray-200 lg:hidden"
+>
+  <div class="flex flex-col px-4 py-3 space-y-2 text-sm font-medium">
+    <a href="/" class="text-gray-800 hover:text-emerald-600">Home</a>
+    <a href="#services" class="text-gray-800 hover:text-emerald-600"
+      >Services</a
+    >
+    <a href="#how-it-works" class="text-gray-800 hover:text-emerald-600"
+      >How it Works</a
+    >
+    <a
+      href="#news"
+      class="text-gray-800 hover:text-emerald-600 flex items-center"
+    >
+      News & Alerts
+      <span
+        class="bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center ml-1"
+        >!</span
+      >
+    </a>
+    <a href="#support" class="text-gray-800 hover:text-emerald-600">Support</a>
+
+    <% if (typeof user !== 'undefined' && user) { %>
+    <hr class="my-2 border-gray-200" />
+    <span class="text-gray-600">👤 <%= user.name %></span>
+    <a href="/logout" class="text-red-600 hover:underline">Logout</a>
+    <% } else { %>
+    <a href="/login" class="text-emerald-600 hover:underline">Sign in</a>
+    <a href="/register" class="text-emerald-600 hover:underline">Register</a>
+    <% } %>
+  </div>
+</nav>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const menuBtn = document.getElementById('menu-btn')
+    const mobileMenu = document.getElementById('mobile-menu')
+
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden')
+      })
+    }
+  })
+</script>

@@ -1,0 +1,109 @@
+<%
+// determine role: prefer userRole param, then user.role (string), then user.role_id (number)
+let role = (typeof userRole !== 'undefined' && userRole) ? String(userRole).toLowerCase()
+         : (typeof user !== 'undefined' && user.role) ? String(user.role).toLowerCase()
+         : (typeof user !== 'undefined' && user.role_id) ? (user.role_id === 4 ? 'admin' : user.role_id === 2 ? 'officer' : 'citizen')
+         : 'citizen';
+%>
+
+<% if (role === 'admin' || role === '4') { %>
+<!-- Admin desktop sidebar -->
+<aside class="hidden lg:block w-64 bg-emerald-800 min-h-screen p-6">
+  <h2 class="text-2xl font-bold text-white mb-6">Admin Panel</h2>
+  <nav class="space-y-2">
+    <a
+      href="/admin/dashboard"
+      class="block py-2 px-4 rounded bg-emerald-100 text-emerald-700 font-medium"
+    >
+      <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+    </a>
+    <a
+      href="/admin/users"
+      class="block py-2 px-4 rounded text-white hover:bg-emerald-100 hover:text-emerald-700"
+    >
+      <i class="fas fa-users mr-2"></i> Manage Users
+    </a>
+    <a
+      href="/admin/services"
+      class="block py-2 px-4 rounded text-white hover:bg-emerald-100 hover:text-emerald-700"
+    >
+      <i class="fas fa-cogs mr-2"></i> Manage Services
+    </a>
+    <a
+      href="/admin/reports"
+      class="block py-2 px-4 rounded text-white hover:bg-emerald-100 hover:text-emerald-700"
+    >
+      <i class="fas fa-chart-bar mr-2"></i> Reports
+    </a>
+    <a
+      href="/logout"
+      class="block py-2 px-4 rounded hover:bg-emerald-100 text-red-600"
+    >
+      <i class="fas fa-sign-out-alt mr-2"></i> Logout
+    </a>
+  </nav>
+</aside>
+
+<% } else if (role === 'officer' || role === '2') { %>
+<!-- Officer desktop sidebar (from your snippet) -->
+<aside
+  class="hidden lg:block w-64 bg-emerald-800 border-r border-gray-200 min-h-screen p-6"
+>
+  <h2 class="text-lg font-bold text-white mb-6">Officer Panel</h2>
+  <nav class="space-y-2">
+    <a
+      href="/officer/dashboard"
+      class="block py-2 px-4 rounded bg-emerald-100 text-emerald-800 font-medium"
+    >
+      <i class="fas fa-tasks mr-2"></i> My Queue
+    </a>
+    <a
+      href="/officer/reports"
+      class="block py-2 px-4 rounded text-white hover:bg-emerald-100 hover:text-emerald-800"
+    >
+      <i class="fas fa-chart-bar mr-2"></i> Reports
+    </a>
+    <a
+      href="/logout"
+      class="block py-2 px-4 rounded hover:bg-emerald-100 text-red-600"
+    >
+      <i class="fas fa-sign-out-alt mr-2"></i> Logout
+    </a>
+  </nav>
+</aside>
+
+<% } else { %>
+<!-- Citizen desktop sidebar (from your snippet, adjusted to lg visibility) -->
+<aside class="hidden lg:block w-64 bg-emerald-800 min-h-screen p-6">
+  <h2 class="text-lg font-semibold text-white mb-6">Dashboard</h2>
+  <nav class="space-y-2">
+    <a
+      href="/citizen/dashboard"
+      class="block py-2 px-4 rounded bg-emerald-100 text-emerald-600 font-medium"
+    >
+      <i class="fas fa-home mr-2"></i> Overview
+    </a>
+    <a
+      href="/citizen/requests"
+      class="block py-2 px-4 rounded text-white hover:bg-emerald-100 hover:text-emerald-600"
+    >
+      <i class="fas fa-file-alt mr-2"></i> My Requests
+    </a>
+    <a
+      href="/citizen/apply-service"
+      class="block py-2 px-4 rounded text-white hover:bg-emerald-100 hover:text-emerald-600"
+    >
+      <i class="fas fa-plus-circle mr-2"></i> Apply New Service
+    </a>
+    <a
+      href="/profile"
+      class="block py-2 px-4 rounded text-white hover:bg-emerald-100 hover:text-emerald-600"
+    >
+      <i class="fas fa-user mr-2"></i> Profile Settings
+    </a>
+    <a href="/logout" class="block py-2 px-4 rounded text-red-600">
+      <i class="fas fa-sign-out-alt mr-2"></i> Logout
+    </a>
+  </nav>
+</aside>
+<% } %>

@@ -1,0 +1,133 @@
+<!-- views/citizen/requestDetail.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <%- include('../partials/header.ejs') %>
+    <div class="flex">
+      <aside
+        class="hidden sm:block w-64 bg-emerald-800 border-r min-h-screen p-6"
+      >
+        <h2 class="text-lg font-semibold text-white mb-6">Request Details</h2>
+        <nav class="space-y-2">
+          <a
+            href="/citizen/dashboard"
+            class="block py-2 px-4 rounded text-white hover:bg-emerald-100 hover:text-emerald-800 text-sm"
+            >← Back to Dashboard</a
+          >
+        </nav>
+      </aside>
+      <main class="p-6 sm:p-8">
+        <div class="max-w-4xl mx-auto">
+          <h1 class="text-2xl font-bold mb-6">Request Details</h1>
+
+          <!-- Status Header -->
+          <div class="bg-gray-100 p-6 rounded-lg shadow-lg mb-6">
+            <div class="flex flex-col sm:flex-row justify-between">
+              <div>
+                <h2 class="text-lg font-semibold">REQ-20250910-0001</h2>
+                <p class="text-gray-600">Passport Renewal</p>
+              </div>
+              <div class="mt-3 sm:mt-0">
+                <span
+                  class="px-3 py-1 bg-emerald-100 text-emerald-600 rounded-full text-sm font-medium"
+                >
+                  Under Review
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="bg-gray-100 rounded-lg shadow-lg">
+            <div class="border-b border-gray-200">
+              <nav class="flex space-x-8 px-6">
+                <a
+                  href="#"
+                  class="py-4 px-1 border-b-2 border-emerald-500 font-medium text-emerald-600"
+                  >Overview</a
+                >
+                <a
+                  href="#"
+                  class="py-4 px-1 border-b-2 border-transparent font-medium text-gray-500 hover:text-gray-700"
+                  >Documents</a
+                >
+                <a
+                  href="#"
+                  class="py-4 px-1 border-b-2 border-transparent font-medium text-gray-500 hover:text-gray-700"
+                  >Timeline</a
+                >
+                <a
+                  href="#"
+                  class="py-4 px-1 border-b-2 border-transparent font-medium text-gray-500 hover:text-gray-700"
+                  >Messages</a
+                >
+              </nav>
+            </div>
+
+            <!-- Overview Content -->
+            <div class="p-6">
+              <h3 class="text-lg font-semibold mb-4">Personal Information</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <strong>Full Name:</strong>
+                  <%=
+                  request.personal_info.full_name %>
+                </div>
+                <div>
+                  <strong>Tazkira Number:</strong>
+                  <%=
+                  request.personal_info.tazkira_number %>
+                </div>
+                <div>
+                  <strong>Father's Name:</strong>
+                  <%=
+                  request.personal_info.father_name || '—' %>
+                </div>
+                <div>
+                  <strong>Date of Birth:</strong>
+                  <%= request.personal_info.dob
+                  || '—' %>
+                </div>
+                <div>
+                  <strong>Phone:</strong>
+                  <%= request.personal_info.phone %>
+                </div>
+                <div>
+                  <strong>Email:</strong>
+                  <%= request.personal_info.email %>
+                </div>
+              </div>
+
+              <div
+                class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg"
+              >
+                <p class="text-sm text-emerald-800">
+                  <strong>Estimated Processing Time:</strong> 5 days<br />
+                  <strong>Assigned Officer:</strong> Ali Mohammadi (Response
+                  SLA: 72 hours)
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

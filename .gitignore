@@ -1,0 +1,19 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Uploads
+uploads/
+
+# Build outputs 
+dist/
+build/
+
+# Prettier cache 
+.prettiercache
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - E-Gov Portal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts & FontAwesome -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      .card-hover:hover {
+        transform: translateY(-2px);
+        transition: all 0.1s ease;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+    <!-- Header -->
+    <%- include('../partials/header.ejs') %>
+
+    <div class="flex flex-1">
+      <%- include('../partials/sidebar-desktop.ejs', { userRole: user.role }) %>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-hidden">
+        <div class="mb-8">
+          <h1 class="text-3xl text-emerald-700 font-bold">Admin Dashboard</h1>
+          <p class="text-gray-700">
+            Welcome back, <%= user.name %> — Here's the system overview.
+          </p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8"
+        >
+          <div
+            class="bg-emerald-100 p-6 rounded-lg shadow hover:shadow-lg border border-gray-100 text-center"
+          >
+            <h3 class="text-sm font-medium text-gray-500">Total Requests</h3>
+            <p class="text-2xl font-bold text-gray-900 mt-1">
+              <%= stats.total_requests.toLocaleString() %>
+            </p>
+          </div>
+          <div
+            class="bg-emerald-200 p-6 rounded-lg shadow hover:shadow-lg border border-gray-100 text-center"
+          >
+            <h3 class="text-sm font-medium text-gray-500">Approved</h3>
+            <p class="text-2xl font-bold text-green-600 mt-1">
+              <%= stats.approved.toLocaleString() %>
+            </p>
+          </div>
+          <div
+            class="bg-emerald-300 p-6 rounded-lg shadow hover:shadow-lg border border-gray-100 text-center"
+          >
+            <h3 class="text-sm font-medium text-gray-500">Rejected</h3>
+            <p class="text-2xl font-bold text-red-600 mt-1">
+              <%= stats.rejected.toLocaleString() %>
+            </p>
+          </div>
+          <div
+            class="bg-emerald-400 p-6 rounded-lg shadow hover:shadow-lg border border-gray-100 text-center"
+          >
+            <h3 class="text-sm font-medium text-gray-500">Revenue</h3>
+            <p class="text-2xl font-bold text-blue-600 mt-1">
+              AFN <%= stats.total_revenue.toLocaleString() %>
+            </p>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white p-6 rounded-lg shadow mb-8">
+          <h2 class="text-lg font-semibold mb-4">Quick Actions</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <a
+              href="/admin/users"
+              class="flex items-center p-4 border border-emerald-200 rounded-lg hover:bg-emerald-50 card-hover"
+            >
+              <div
+                class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mr-3"
+              >
+                <i class="fas fa-users"></i>
+              </div>
+              <div>
+                <h3 class="font-medium">Manage Users</h3>
+                <p class="text-sm text-gray-600">Add, edit, or remove users</p>
+              </div>
+            </a>
+            <a
+              href="/admin/services"
+              class="flex items-center p-4 border border-emerald-200 rounded-lg hover:bg-emerald-50 card-hover"
+            >
+              <div
+                class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mr-3"
+              >
+                <i class="fas fa-cogs"></i>
+              </div>
+              <div>
+                <h3 class="font-medium">Manage Services</h3>
+                <p class="text-sm text-gray-600">
+                  Configure available services
+                </p>
+              </div>
+            </a>
+            <a
+              href="/admin/reports"
+              class="flex items-center p-4 border border-emerald-200 rounded-lg hover:bg-emerald-50 card-hover"
+            >
+              <div
+                class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 mr-3"
+              >
+                <i class="fas fa-chart-bar"></i>
+              </div>
+              <div>
+                <h3 class="font-medium">Reports & Analytics</h3>
+                <p class="text-sm text-gray-600">View system statistics</p>
+              </div>
+            </a>
+            <a
+              href="/logout"
+              class="flex items-center p-4 border border-emerald-200 rounded-lg hover:bg-emerald-50 card-hover text-red-700"
+            >
+              <div
+                class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 mr-3"
+              >
+                <i class="fas fa-sign-out-alt"></i>
+              </div>
+              <div>
+                <h3 class="font-medium">Logout</h3>
+                <p class="text-sm">Sign out of your account</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div
+          class="bg-white rounded-lg shadow border border-gray-100 overflow-x-auto"
+        >
+          <div class="p-6 border-b border-emerald-200">
+            <h2 class="text-lg text-emerald-700 font-semibold">
+              Recent Requests
+            </h2>
+          </div>
+          <table class="min-w-full divide-y divide-emerald-200 text-sm">
+            <thead class="bg-emerald-50">
+              <tr>
+                <th
+                  class="px-6 py-3 text-xs font-medium text-gray-500 uppercase"
+                >
+                  ID
+                </th>
+                <th
+                  class="px-6 py-3 text-xs font-medium text-gray-500 uppercase"
+                >
+                  Citizen
+                </th>
+                <th
+                  class="px-6 py-3 text-xs font-medium text-gray-500 uppercase"
+                >
+                  Service
+                </th>
+                <th
+                  class="px-6 py-3 text-xs font-medium text-gray-500 uppercase"
+                >
+                  Status
+                </th>
+                <th
+                  class="px-6 py-3 text-xs font-medium text-gray-500 uppercase"
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-emerald-200">
+              <% recentRequests.forEach(req => { %>
+              <tr class="hover:bg-emerald-50">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <%= req.id %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                  <%= req.citizen_name %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                  <%= req.service_name %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span
+                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= req.status === 'Approved' ? 'bg-green-100 text-green-800' : req.status === 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800' %>"
+                  >
+                    <%= req.status %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a
+                    href="/officer/request/<%= req.id %>"
+                    class="text-emerald-600 hover:text-emerald-900"
+                    >Review</a
+                  >
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+
+    <!-- Mobile Sidebar -->
+    <%- include('../partials/sidebar-mobile.ejs') %>
+
+    <!-- Sidebar Mobile Script -->
+    <script src="/js/sidebar.js"></script>
+  </body>
+</html>

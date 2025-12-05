@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-Gov Portal — Apply Online, Skip the Queue</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8fafc;
+      }
+      .hero-video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+        opacity: 0.3;
+      }
+      .glass-morphism {
+        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 1rem;
+      }
+      .card-hover:hover {
+        transform: translateY(-6px);
+        box-shadow:
+          0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        transition: all 0.3s ease;
+      }
+      .fade-in {
+        animation: fadeIn 1s ease-in-out forwards;
+        opacity: 0;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .stagger-1 {
+        animation-delay: 0.2s;
+      }
+      .stagger-2 {
+        animation-delay: 0.4s;
+      }
+      .stagger-3 {
+        animation-delay: 0.6s;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-900 relative overflow-x-hidden">
+    <!-- Header -->
+    <%- include('partials/header.ejs') %>
+
+    <!-- Hero Section with Background Video -->
+    <section
+      class="relative h-screen flex items-center justify-center text-white overflow-hidden"
+    >
+      <video autoplay muted loop class="hero-video">
+        <source src="/videos/hero-section.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-emerald-900/80 to-transparent"
+      ></div>
+      <div class="max-w-4xl mx-auto px-6 text-left z-10">
+        <h1
+          class="text-4xl md:text-6xl font-bold mb-6 leading-tight fade-in stagger-1"
+        >
+          Government Services,<br /><span class="text-emerald-300"
+            >Online & Instant</span
+          >
+        </h1>
+        <p class="text-lg md:text-xl mb-8 text-gray-100 fade-in stagger-2">
+          No queues. No paperwork. Just fast, secure access to passport renewal,
+          business licenses, land registration, and more.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 fade-in stagger-3">
+          <a
+            href="/login"
+            class="bg-emerald-600 hover:bg-emerald-500 text-center text-white px-8 py-4 rounded-xl font-semibold shadow-lg transition transform hover:scale-105"
+          >
+            Start a Request
+          </a>
+          <a
+            href="/services"
+            class="border-2 border-white text-center text-white hover:bg-white hover:text-emerald-800 px-8 py-4 rounded-xl font-semibold transition transform hover:scale-105"
+          >
+            Explore Services
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <main class="px-6 py-16 relative -mt-20">
+      <!-- Stats Bar -->
+      <section
+        class="max-w-6xl mx-auto bg-white rounded-2xl shadow-lg p-6 mb-16 glass-morphism text-center grid grid-cols-1 md:grid-cols-3 gap-6"
+      >
+        <div class="fade-in stagger-1">
+          <strong class="text-2xl font-bold text-emerald-700">124+</strong>
+          <p class="text-gray-600">Requests Today</p>
+        </div>
+        <div class="fade-in stagger-2">
+          <strong class="text-2xl font-bold text-emerald-700">6 days</strong>
+          <p class="text-gray-600">Average Processing Time</p>
+        </div>
+        <div class="fade-in stagger-3">
+          <strong class="text-2xl font-bold text-emerald-700">8</strong>
+          <p class="text-gray-600">Active Departments</p>
+        </div>
+      </section>
+
+      <!-- Track Request -->
+      <section
+        class="max-w-3xl mx-auto mb-16 bg-white p-8 rounded-2xl shadow text-center glass-morphism"
+      >
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">
+          Track Your Request
+        </h2>
+        <p class="text-gray-600 mb-6">
+          Enter your Request ID to check real-time status
+        </p>
+        <form
+          action="/track"
+          method="GET"
+          class="flex flex-col sm:flex-row gap-3 justify-center"
+        >
+          <input
+            type="text"
+            name="requestId"
+            placeholder="REQ-2025XXXX-XXXX"
+            class="px-5 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-emerald-100 w-full sm:w-80"
+            required
+          />
+          <button
+            type="submit"
+            class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-medium transition"
+          >
+            Check Status
+          </button>
+        </form>
+      </section>
+
+      <!-- Popular Services -->
+      <section id="services" class="mb-20">
+        <h2
+          class="text-3xl font-extrabold text-center text-gray-800 mb-12 fade-in"
+        >
+          Popular Services
+        </h2>
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto"
+        >
+          <!-- prettier-ignore -->
+          <% ['Passport Renewal', 'Tazkira Update', 'Business License', 'Land Registration'].forEach(service => { %>
+          <div
+            class="bg-white p-6 rounded-2xl shadow-md card-hover glass-morphism fade-in"
+          >
+            <div class="text-4xl mb-4">📄</div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2"><%= service %></h3>
+            <p class="text-sm text-gray-500 mb-4">
+              Fee: AFN <%= service === 'Passport Renewal' ? '1,200' : '500' %>
+            </p>
+            <a
+              href="/login"
+              class="block w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 text-center rounded-lg font-medium transition"
+            >
+              Apply Now
+            </a>
+          </div>
+          <% }) %>
+        </div>
+      </section>
+
+      <!-- How It Works -->
+      <section
+        id="how-it-works"
+        class="bg-cover bg-center py-20 relative"
+        style="
+          background-image:
+            linear-gradient(rgba(127, 243, 204, 0.7), rgba(157, 255, 222, 0.7)),
+            url('/images/how-it-work.jpg');
+        "
+      >
+        <h2 class="text-3xl font-extrabold text-center text-gray-800 mb-16">
+          How It Works
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+          <div class="fade-in stagger-1">
+            <div
+              class="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-xl mx-auto mb-4 font-bold"
+            >
+              1
+            </div>
+            <h3 class="font-bold text-gray-800 mb-2">Create Account</h3>
+            <p class="text-sm text-gray-800">
+              Sign up in minutes using your Tazkira number.
+            </p>
+          </div>
+          <div class="fade-in stagger-2">
+            <div
+              class="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-xl mx-auto mb-4 font-bold"
+            >
+              2
+            </div>
+            <h3 class="font-bold text-gray-800 mb-2">Fill Form Online</h3>
+            <p class="text-sm text-gray-600">
+              Upload documents securely and complete your request.
+            </p>
+          </div>
+          <div class="fade-in stagger-3">
+            <div
+              class="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-xl mx-auto mb-4 font-bold"
+            >
+              3
+            </div>
+            <h3 class="font-bold text-gray-800 mb-2">Pay Fee (AFN)</h3>
+            <p class="text-sm text-gray-600">
+              Pay online via bank transfer or mobile money.
+            </p>
+          </div>
+          <div class="fade-in stagger-3">
+            <div
+              class="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-xl mx-auto mb-4 font-bold"
+            >
+              4
+            </div>
+            <h3 class="font-bold text-gray-800 mb-2">Track & Receive</h3>
+            <p class="text-sm text-gray-600">
+              Monitor progress and download your certificate.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- News & Alerts -->
+      <section id="news" class="mb-20">
+        <div class="bg-red-50 border-l-4 border-red-500 rounded-r-lg p-8">
+          <h2 class="text-2xl font-bold text-red-800 flex items-center mb-4">
+            <i class="fas fa-exclamation-triangle mr-3"></i> Important
+            Announcements
+          </h2>
+          <ul class="space-y-4">
+            <li class="flex space-x-3 space-x-reverse">
+              <i class="fas fa-bullhorn text-red-500 mt-1"></i>
+              <p class="text-gray-700">
+                New Business License portal launching on October 1st, 2025.
+              </p>
+            </li>
+            <li class="flex space-x-3 space-x-reverse">
+              <i class="fas fa-clock text-yellow-500 mt-1"></i>
+              <p class="text-gray-700">
+                Processing times may extend by 2–3 days during Eid holidays.
+              </p>
+            </li>
+            <li class="flex space-x-3 space-x-reverse">
+              <i class="fas fa-info-circle text-blue-500 mt-1"></i>
+              <p class="text-gray-700">
+                Mobile payments now supported via M-Paisa and Roshan Pay.
+              </p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Why Choose Us -->
+      <section class="mb-20 text-center">
+        <h2 class="text-3xl font-extrabold text-gray-800 mb-12">
+          Why Choose E-Gov?
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+          <div class="fade-in stagger-1">
+            <div class="text-5xl mb-4">⏱️</div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3">Save Time</h3>
+            <p class="text-gray-600">
+              Skip long queues. Get services in days, not weeks.
+            </p>
+          </div>
+          <div class="fade-in stagger-2">
+            <div class="text-5xl mb-4">🔒</div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3">
+              Secure & Verified
+            </h3>
+            <p class="text-gray-600">
+              Your data is encrypted and verified with national ID.
+            </p>
+          </div>
+          <div class="fade-in stagger-3">
+            <div class="text-5xl mb-4">📱</div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3">
+              Available Anywhere
+            </h3>
+            <p class="text-gray-600">
+              Apply from home, work, or on the go — just need internet.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Support -->
+      <section id="support" class="text-center mb-16">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Need Help?</h2>
+        <p class="text-gray-600 mb-8">Our support team is here for you.</p>
+        <div class="inline-flex flex-wrap justify-center gap-6 text-gray-700">
+          <div class="flex items-center space-x-2">
+            <i class="fas fa-phone"></i>
+            <span>Hotline: 0800 123 456</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fas fa-envelope"></i>
+            <span>Email: support@egov.af</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Kabul Main Office</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-10 bg-gray-800 text-white">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-10 text-sm">
+          <div>
+            <h3 class="font-bold mb-4">Quick Links</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="/" class="text-gray-300 hover:text-white transition"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/services"
+                  class="text-gray-300 hover:text-white transition"
+                  >Services</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#how-it-works"
+                  class="text-gray-300 hover:text-white transition"
+                  >How It Works</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#news"
+                  class="text-gray-300 hover:text-white transition"
+                  >News</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-bold mb-4">Services</h3>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="/services/passport"
+                  class="text-gray-300 hover:text-white transition"
+                  >Passport Renewal</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/services/tazkira"
+                  class="text-gray-300 hover:text-white transition"
+                  >Tazkira Update</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/services/business"
+                  class="text-gray-300 hover:text-white transition"
+                  >Business License</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/services/land"
+                  class="text-gray-300 hover:text-white transition"
+                  >Land Registration</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-bold mb-4">Support</h3>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="/support"
+                  class="text-gray-300 hover:text-white transition"
+                  >Contact Us</a
+                >
+              </li>
+              <li>
+                <a href="/faq" class="text-gray-300 hover:text-white transition"
+                  >FAQ</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/help"
+                  class="text-gray-300 hover:text-white transition"
+                  >Help Center</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-bold mb-4">Legal</h3>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="/privacy"
+                  class="text-gray-300 hover:text-white transition"
+                  >Privacy Policy</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/terms"
+                  class="text-gray-300 hover:text-white transition"
+                  >Terms of Service</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/data"
+                  class="text-gray-300 hover:text-white transition"
+                  >Data Residency</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-bold mb-4">Follow Us</h3>
+            <div class="flex space-x-6">
+              <a href="#" class="text-gray-300 hover:text-white"
+                ><i class="fab fa-facebook fa-lg"></i
+              ></a>
+              <a href="#" class="text-gray-300 hover:text-white"
+                ><i class="fab fa-twitter fa-lg"></i
+              ></a>
+              <a href="#" class="text-gray-300 hover:text-white"
+                ><i class="fab fa-instagram fa-lg"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <div
+          class="mt-10 pt-6 border-t border-gray-700 text-center text-sm text-gray-400"
+        >
+          &copy; 2025 Afghanistan E-Government Portal — All rights reserved.
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const fadeElements = document.querySelectorAll('.fade-in')
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.style.opacity = 1
+              }
+            })
+          },
+          { threshold: 0.1 }
+        )
+
+        fadeElements.forEach((el) => {
+          el.style.opacity = 0
+          observer.observe(el)
+        })
+      })
+    </script>
+  </body>
+</html>

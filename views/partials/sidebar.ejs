@@ -1,0 +1,7 @@
+<% if (userRole === 'admin') { %>
+<%- include('sidebar-admin.ejs') %>
+<% } else if (userRole === 'officer') { %>
+<%- include('sidebar-officer.ejs') %>
+<% } else { %>
+<%- include('sidebar-citizen.ejs') %>
+<% } %>

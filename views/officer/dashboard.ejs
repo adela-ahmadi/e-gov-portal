@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Officer Dashboard - E-Gov Portal</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+ 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .sla-green { border-left: 4px solid #10B981; }
+    .sla-yellow { border-left: 4px solid #F59E0B; }
+    .sla-red { border-left: 4px solid #EF4444; }
+    @media (max-width: 640px) {
+      th:nth-child(3), td:nth-child(3),
+      th:nth-child(5), td:nth-child(5) {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen">
+
+  <!-- Header -->
+  <%- include('../partials/header.ejs') %>
+
+  <div class="flex flex-col lg:flex-row">
+  
+   <%- include('../partials/sidebar-desktop.ejs', { userRole: user.role }) %>
+    <!-- Main Content -->
+    <main class="flex-1 p-4 sm:p-6 lg:p-8">
+      <h1 class="text-3xl text-emerald-700 font-bold mb-6">
+         All My Queue
+      </h1>
+     
+      <!-- Summary Cards - Responsive Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+        <div class="bg-emerald-100 p-4 rounded-lg shadow hover:shadow-lg text-center">
+          <h3 class="text-xs font-bold text-gray-700">Total Assigned</h3>
+          <p class="text-xl font-bold text-gray-900 mt-1">24</p>
+        </div>
+        <div class="bg-emerald-200 p-4 rounded-lg shadow hover:shadow-lg text-center">
+          <h3 class="text-xs font-bold text-gray-700">Awaiting Info</h3>
+          <p class="text-xl font-bold text-yellow-600 mt-1">5</p>
+        </div>
+        <div class="bg-emerald-300 p-4 rounded-lg shadow hover:shadow-lg text-center">
+          <h3 class="text-xs font-bold text-gray-700">SLA Breaches</h3>
+          <p class="text-xl font-bold text-red-600 mt-1">2</p>
+        </div>
+        <div class="bg-emerald-400 p-4 rounded-lg shadow hover:shadow-lg text-center">
+          <h3 class="text-xs font-bold text-gray-700">Avg. Time</h3>
+          <p class="text-xl font-bold text-emerald-900 mt-1">4.2 days</p>
+        </div>
+      </div>
+
+      <!-- Filters - Stack on mobile -->
+      <form action="/officer/dashboard" method="GET" class="bg-gray-50 p-4 rounded-lg shadow mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <input
+            type="text"
+            name="search"
+            placeholder="Search by ID or Name"
+            value="<%= query?.search || '' %>"
+            class="col-span-2 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-emerald-500 text-sm"
+          />
+          <select name="service" class="px-3 py-2 border border-gray-300  rounded text-sm">
+            <option value="">All Services</option>
+            <option value="Passport Renewal" <%= (query?.service === 'Passport Renewal') ? 'selected' : '' %>>Passport</option>
+            <option value="Tazkira Update" <%= (query?.service === 'Tazkira Update') ? 'selected' : '' %>>Tazkira</option>
+          </select>
+          <select name="status" class="px-3 py-2 border border-gray-300 rounded text-sm">
+            <option value="">All Status</option>
+            <option value="Under Review" <%= (query?.status === 'Under Review') ? 'selected' : '' %>>Under Review</option>
+            <option value="More Info Required" <%= (query?.status === 'More Info Required') ? 'selected' : '' %>>More Info</option>
+          </select>
+          <input 
+            type="date" 
+            name="date" 
+            value="<%= query?.date || '' %>" 
+            class="px-3 py-2 border border-gray-300 rounded text-sm" 
+          />
+          <button type="submit" class="bg-emerald-600 text-white px-3 py-2 rounded hover:bg-emerald-700 text-sm whitespace-nowrap">
+            Apply
+          </button>
+        </div>
+      </form>
+
+      <!-- Requests Table + Responsive List -->
+      <div class="bg-white rounded-lg shadow overflow-hidden border border-gray-100">
+        <div class="p-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <h2 class="text-lg font-semibold">My Queue</h2>
+          <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+            <button class="text-xs px-2 py-1 border border-gray-300 rounded hover:bg-emerald-50">Assign to Self</button>
+            <button class="text-xs px-2 py-1 border border-gray-300 rounded hover:bg-emerald-50">Mark Reviewed</button>
+          </div>
+        </div>
+
+        <!-- Desktop Table -->
+        <div class="hidden sm:block overflow-x-auto">
+          <table class="min-w-full divide-y divide-emerald-200 text-sm">
+            <thead class="bg-emerald-50">
+              <tr>
+                <th class="px-4 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <input type="checkbox" class="rounded" />
+                </th>
+                <th class="px-4 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                <th class="px-4 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider">Citizen</th>
+                <th class="px-4 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                <th class="px-4 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider">Submitted</th>
+                <th class="px-4 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-4 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-emerald-200">
+              <% if (requests && requests.length > 0) { %>
+                <% requests.forEach(req => { %>
+                  <tr class="hover:bg-gray-50 <%= req.sla_status === 'breach' ? 'sla-red' : req.sla_status === 'warning' ? 'sla-yellow' : 'sla-green' %>">
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <input type="checkbox" class="rounded" />
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap font-medium"><%= req.id %></td>
+                    <td class="px-4 py-3 whitespace-nowrap"><%= req.citizen_name %></td>
+                    <td class="px-4 py-3 whitespace-nowrap"><%= req.service_name %></td>
+                    <td class="px-4 py-3 whitespace-nowrap"><%= req.submitted_at %></td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                        <%= req.status === 'Approved' ? 'bg-green-100 text-green-800' :
+                           req.status === 'Rejected' ? 'bg-red-100 text-red-800' :
+                           req.status === 'More Info Required' ? 'bg-yellow-100 text-yellow-800' :
+                           'bg-emerald-100 text-emerald-800' %>">
+                        <%= req.status %>
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap font-medium">
+                      <a href="/officer/request/<%= req.id %>" class="text-emerald-600 hover:text-emerald-900">Review</a>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="7" class="px-4 py-3 text-center text-sm text-gray-500">No requests found.</td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Card List -->
+        <div class="sm:hidden divide-y divide-emerald-200">
+          <% if (requests && requests.length > 0) { %>
+            <% requests.forEach(req => { %>
+              <div class="p-4 border-l-4 
+                <%= req.sla_status === 'breach' ? 'border-red-500' : 
+                   req.sla_status === 'warning' ? 'border-yellow-500' : 'border-green-500' %>">
+                <div class="flex justify-between">
+                  <h3 class="font-medium"><%= req.service_name %></h3>
+                  <span class="px-2 text-xs rounded-full 
+                    <%= req.status === 'Approved' ? 'bg-green-100 text-green-800' :
+                       req.status === 'Rejected' ? 'bg-red-100 text-red-800' :
+                       req.status === 'More Info Required' ? 'bg-yellow-100 text-yellow-800' :
+                       'bg-emerald-100 text-emerald-800' %>">
+                    <%= req.status %>
+                  </span>
+                </div>
+                <p class="text-xs text-gray-600 mt-1">ID: <%= req.id %></p>
+                <p class="text-xs text-gray-600">Citizen: <%= req.citizen_name %></p>
+                <p class="text-xs text-gray-600">Submitted: <%= req.submitted_at %></p>
+                <div class="mt-3 flex justify-end">
+                  <a href="/officer/request/<%= req.id %>" class="text-emerald-600 text-xs">Review</a>
+                </div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <div class="p-4 text-center text-sm text-gray-500">
+              No requests found.
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+    <%- include('../partials/sidebar-mobile.ejs') %>
+
+ <script src="/js/sidebar.js"></script>
+
+</body>
+</html>

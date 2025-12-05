@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Reports - Officer Panel</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      .chart-container {
+        height: 300px;
+        position: relative;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-900 min-h-screen overflow-x-hidden">
+    <!-- Header -->
+    <%- include('../partials/header.ejs') %>
+
+    <div class="flex flex-col lg:flex-row">
+      <%- include('../partials/sidebar-desktop.ejs', { userRole: user.role }) %>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-4 sm:p-6 lg:p-8">
+        <div class="max-w-7xl mx-auto">
+          <h1 class="text-3xl text-emerald-700 font-bold mb-6">
+            My Performance Reports
+          </h1>
+
+          <!-- Stats Summary -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div
+              class="bg-emerald-100 p-4 rounded-lg shadow hover:shadow-lg text-center"
+            >
+              <h3 class="text-xs font-medium text-gray-500">Total Reviewed</h3>
+              <p class="text-xl font-bold text-gray-900 mt-1">
+                <%= stats.reviewed %>
+              </p>
+            </div>
+            <div
+              class="bg-emerald-200 p-4 rounded-lg shadow hover:shadow-lg text-center"
+            >
+              <h3 class="text-xs font-medium text-gray-500">Avg. Time</h3>
+              <p class="text-xl font-bold text-blue-600 mt-1">
+                <%= stats.avgTime %> days
+              </p>
+            </div>
+            <div
+              class="bg-emerald-300 p-4 rounded-lg shadow hover:shadow-lg text-center"
+            >
+              <h3 class="text-xs font-medium text-gray-500">SLA Compliance</h3>
+              <p class="text-xl font-bold text-green-600 mt-1">
+                <%= stats.compliance %>%
+              </p>
+            </div>
+            <div
+              class="bg-emerald-400 p-4 rounded-lg shadow hover:shadow-lg text-center"
+            >
+              <h3 class="text-xs font-medium text-gray-500">Pending Actions</h3>
+              <p class="text-xl font-bold text-yellow-600 mt-1">
+                <%= stats.pending %>
+              </p>
+            </div>
+          </div>
+
+          <!-- Charts Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Weekly Tasks Chart -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow">
+              <h3 class="font-semibold mb-4">Tasks This Week</h3>
+              <div class="chart-container">
+                <canvas id="weeklyChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Status Distribution Chart -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow">
+              <h3 class="font-semibold mb-4">Request Status Distribution</h3>
+              <div class="chart-container">
+                <canvas id="statusChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity Table -->
+          <div
+            class="bg-white rounded-lg shadow overflow-hidden border border-gray-100"
+          >
+            <div class="p-6 border-b border-emerald-200">
+              <h2 class="text-lg font-semibold">Recent Activities</h2>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-emerald-200 text-sm">
+                <thead class="bg-emerald-50">
+                  <tr>
+                    <th
+                      class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Date
+                    </th>
+                    <th
+                      class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Request ID
+                    </th>
+                    <th
+                      class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Action
+                    </th>
+                    <th
+                      class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-emerald-200">
+                  <% recentRequests.forEach(req => { %>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                      <%= new Date(req.created_at).toISOString().split('T')[0]
+                      %>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                      REQ-<%= req.id %>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                      <%= req.service_name %>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span
+                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= req.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : req.status === 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800' %>"
+                      >
+                        <%= req.status %>
+                      </span>
+                    </td>
+                  </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <!-- Sidebar موبایل -->
+    <%- include('../partials/sidebar-mobile.ejs') %>
+    <!-- Scripts for Charts -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const weeklyCtx = document.getElementById('weeklyChart')
+        const statusCtx = document.getElementById('statusChart')
+
+        if (weeklyCtx && statusCtx) {
+          // نمودار خطی
+          new Chart(weeklyCtx.getContext('2d'), {
+            type: 'line',
+            data: {
+              labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+              datasets: [
+                {
+                  data: [12, 15, 8, 18, 14],
+                  label: 'Requests Reviewed',
+                  borderColor: '#10b981',
+                  backgroundColor: 'rgba(50, 130, 246, 0.1)',
+                  fill: true,
+                  tension: 0.4
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: true }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: { stepSize: 5 }
+                }
+              }
+            }
+          })
+
+          ///Pie Chart
+          new Chart(statusCtx.getContext('2d'), {
+            type: 'pie',
+            data: {
+              labels: ['Approved', 'More Info Required', 'Pending'],
+              datasets: [
+                {
+                  data: [65, 15, 20],
+                  backgroundColor: ['#10B981', '#EF4444', '#F59E0B']
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: 'right' }
+              }
+            }
+          })
+        }
+      })
+    </script>
+    <script src="/js/sidebar.js"></script>
+  </body>
+</html>

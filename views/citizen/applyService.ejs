@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apply for Service - E-Gov Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-900 min-h-screen overflow-x-hidden">
+    <%- include('../partials/header.ejs') %>
+
+    <div class="flex flex-col lg:flex-row min-h-screen">
+      <%- include('../partials/sidebar-desktop.ejs', { userRole: user.role }) %>
+
+      <main class="flex-1 p-6 sm:p-8">
+        <h2 class="text-xl font-semibold mb-6">Apply for Service</h2>
+
+        <form
+          method="POST"
+          action="/citizen/apply-service"
+          enctype="multipart/form-data"
+        >
+          <input type="hidden" name="citizen_id" value="<%= user.id %>" />
+
+          <div class="bg-gray-100 p-8 rounded-lg shadow-lg mb-6">
+            <h3 class="text-lg font-semibold mb-6">Personal Information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium mb-1">Full Name</label>
+                <input
+                  type="text"
+                  name="full_name"
+                  value="<%= user.name %>"
+                  class="w-full px-4 py-2 border rounded"
+                  readonly
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1"
+                  >Service Type</label
+                >
+                <select
+                  name="service_id"
+                  required
+                  class="w-full px-4 py-2 border rounded"
+                >
+                  <option value="">Select a service...</option>
+                  <% if (services && services.length > 0) { %> <%
+                  services.forEach(s => { %>
+                  <option value="<%= s.id %>"><%= s.name %></option>
+                  <% }) %>
+                  <% } else { %>
+                  <option value="Passport Renewal">Passport Renewal</option>
+                  <option value="Tazkira Update">Tazkira Update</option>
+                  <option value="Business License">Business License</option>
+                  <% } %>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gray-100 p-8 rounded-lg shadow-lg mb-6">
+            <h3 class="text-lg font-semibold mb-6">
+              Upload Required Documents
+            </h3>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium"
+                  >Current Passport Copy</label
+                >
+                <input type="file" name="passport_copy" accept=".pdf,image/*" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium">Tazkira Copy</label>
+                <input type="file" name="tazkira_copy" accept=".pdf,image/*" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium">Recent Photo</label>
+                <input type="file" name="photo" accept="image/*" />
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end gap-4">
+            <button
+              type="submit"
+              class="px-6 py-2 bg-emerald-600 text-white rounded text-sm"
+            >
+              Submit Request
+            </button>
+          </div>
+        </form>
+      </main>
+    </div>
+    <!-- sidebar Mobile -->
+    <%- include('../partials/sidebar-mobile.ejs') %>
+
+    <!-- Sidebar Mobile Script -->
+    <script src="/js/sidebar.js"></script>
+  </body>
+</html>

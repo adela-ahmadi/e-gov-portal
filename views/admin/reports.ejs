@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reports - Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-900 min-h-screen">
+    <!-- Header -->
+    <%- include('../partials/header.ejs') %>
+
+    <div class="flex flex-col lg:flex-row">
+      <%- include('../partials/sidebar-desktop.ejs', { active: 'reports' }) %>
+      <%- include('../partials/sidebar-mobile.ejs', { active: 'reports' }) %>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-4 sm:p-6 lg:p-8">
+        <div class="max-w-7xl mx-auto">
+          <h1 class="text-3xl text-emerald-700 font-bold mb-6">
+            System Reports
+          </h1>
+
+          <!-- Stats Cards -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+          >
+            <div
+              class="bg-emerald-100 p-6 rounded-lg shadow hover:shadow-lg border border-gray-100 text-center"
+            >
+              <h3 class="text-sm font-medium text-gray-500">Total Requests</h3>
+              <p class="text-2xl font-bold text-gray-900 mt-1">
+                <%= stats.total_requests.toLocaleString() %>
+              </p>
+            </div>
+            <div
+              class="bg-emerald-200 p-6 rounded-lg shadow hover:shadow-lg border border-gray-100 text-center"
+            >
+              <h3 class="text-sm font-medium text-gray-500">Approved</h3>
+              <p class="text-2xl font-bold text-green-600 mt-1">
+                <%= stats.approved.toLocaleString() %>
+              </p>
+            </div>
+            <div
+              class="bg-emerald-300 p-6 rounded-lg shadow hover:shadow-lg border border-gray-100 text-center"
+            >
+              <h3 class="text-sm font-medium text-gray-500">Rejected</h3>
+              <p class="text-2xl font-bold text-red-600 mt-1">
+                <%= stats.rejected.toLocaleString() %>
+              </p>
+            </div>
+            <div
+              class="bg-emerald-400 p-6 rounded-lg shadow hover:shadow-lg border border-gray-100 text-center"
+            >
+              <h3 class="text-sm font-medium text-gray-500">Revenue</h3>
+              <p class="text-2xl font-bold text-blue-600 mt-1">
+                AFN <%= stats.total_revenue.toLocaleString() %>
+              </p>
+            </div>
+          </div>
+
+          <!-- Charts -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow">
+              <h3 class="font-semibold mb-4">Requests by Department</h3>
+              <div
+                class="chart-container"
+                style="height: 300px; position: relative"
+              >
+                <canvas id="deptChart"></canvas>
+              </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+              <h3 class="font-semibold mb-4">Approval Rate</h3>
+              <div
+                class="chart-container"
+                style="height: 300px; position: relative"
+              >
+                <canvas id="approvalChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity Table -->
+          <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b border-emerald-200">
+              <h2 class="text-lg font-semibold">Recent Requests</h2>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-emerald-200 text-sm">
+                <thead class="bg-emerald-50">
+                  <tr>
+                    <th
+                      class="px-4 py-3 text-xs font-medium text-gray-500 uppercase"
+                    >
+                      ID
+                    </th>
+                    <th
+                      class="px-4 py-3 text-xs font-medium text-gray-500 uppercase"
+                    >
+                      Service
+                    </th>
+                    <th
+                      class="px-4 py-3 text-xs font-medium text-gray-500 uppercase"
+                    >
+                      Status
+                    </th>
+                    <th
+                      class="px-4 py-3 text-xs font-medium text-gray-500 uppercase"
+                    >
+                      Date
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-3">REQ-20250910-0001</td>
+                    <td class="px-4 py-3">Passport Renewal</td>
+                    <td class="px-4 py-3">
+                      <span
+                        class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs"
+                        >Approved</span
+                      >
+                    </td>
+                    <td class="px-4 py-3">2025-09-10</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="/js/sidebar.js"></script>
+    <script>
+      // Bar Chart
+      const deptCtx = document.getElementById('deptChart').getContext('2d')
+      new Chart(deptCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Interior', 'Commerce', 'Housing'],
+          datasets: [
+            {
+              label: 'Number of Requests',
+              data: [890, 620, 332],
+              backgroundColor: ['#10B981', '#EF4444', '#F59E0B']
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: true }, tooltip: { enabled: true } },
+          scales: { y: { beginAtZero: true, ticks: { stepSize: 100 } } }
+        }
+      })
+
+      // Pie Chart
+      const approvalCtx = document
+        .getElementById('approvalChart')
+        .getContext('2d')
+      new Chart(approvalCtx, {
+        type: 'pie',
+        data: {
+          labels: ['Approved', 'Rejected', 'Pending'],
+          datasets: [
+            {
+              data: [1520, 122, 200],
+              backgroundColor: ['#10B981', '#EF4444', '#F59E0B']
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'right' } }
+        }
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Services - Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-900 min-h-screen">
+    <!-- Header -->
+    <%- include('../partials/header.ejs') %>
+
+    <div class="flex flex-col lg:flex-row">
+      <%- include('../partials/sidebar-desktop.ejs', { active: 'services' }) %>
+      <%- include('../partials/sidebar-mobile.ejs', { active: 'services' }) %>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-4 sm:p-6 lg:p-8">
+        <div class="max-w-7xl mx-auto">
+          <h1 class="text-2xl text-emerald-700 font-bold mb-6">
+            Manage Services
+          </h1>
+
+          <!-- Add Service Form -->
+          <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+            <h2 class="text-lg font-semibold mb-4">Add New Service</h2>
+            <form action="/admin/services/add" method="POST">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label class="block text-sm font-medium mb-1"
+                    >Service Name</label
+                  >
+                  <input
+                    type="text"
+                    name="name"
+                    required
+                    class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-emerald-500 text-sm"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1"
+                    >Department</label
+                  >
+                  <select
+                    name="department_id"
+                    required
+                    class="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+                  >
+                    <option value="1">Interior</option>
+                    <option value="2">Commerce</option>
+                    <option value="3">Housing</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1"
+                    >Fee (AFN)</label
+                  >
+                  <input
+                    type="number"
+                    name="fee"
+                    required
+                    class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-emerald-500 text-sm"
+                  />
+                </div>
+              </div>
+              <div class="mt-4">
+                <button
+                  type="submit"
+                  class="bg-emerald-600 text-white px-6 py-2 rounded hover:bg-emerald-700 text-sm"
+                >
+                  Add Service
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Services Table -->
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="p-4 border-b border-gray-200">
+              <h2 class="text-lg font-semibold">Available Services</h2>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-emerald-200 text-sm">
+                <thead class="bg-emerald-50">
+                  <tr>
+                    <th
+                      class="px-4 py-3 text-xs font-medium text-gray-500 uppercase"
+                    >
+                      Name
+                    </th>
+                    <th
+                      class="px-4 py-3 text-xs font-medium text-gray-500 uppercase"
+                    >
+                      Department
+                    </th>
+                    <th
+                      class="px-4 py-3 text-xs font-medium text-gray-500 uppercase"
+                    >
+                      Fee (AFN)
+                    </th>
+                    <th
+                      class="px-4 py-3 text-xs font-medium text-gray-500 uppercase"
+                    >
+                      ETA (days)
+                    </th>
+                    <th
+                      class="px-4 py-3 text-xs font-medium text-gray-500 uppercase"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-emerald-200">
+                  <% services.forEach(s => { %>
+                  <tr class="hover:bg-emerald-50">
+                    <td class="px-4 py-3 whitespace-nowrap"><%= s.name %></td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <%= s.department_name %>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      AFN <%= s.fee %>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <%= s.eta_days || 'N/A' %> days
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                      <!-- حذف سرویس -->
+                      <form
+                        action="/admin/services/<%= s.id %>/delete"
+                        method="POST"
+                        style="display: inline"
+                        onsubmit="return confirm('Are you sure you want to delete this service?')"
+                      >
+                        <button
+                          type="submit"
+                          class="text-red-600 hover:text-red-900"
+                        >
+                          Delete
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <!-- Sidebar Mobile Script -->
+    <script src="/js/sidebar.js"></script>
+  </body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create an Account - E-Gov Portal</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      .primary {
+        background-color: #0b5fff;
+      }
+      .primary:hover {
+        background-color: #0a50e0;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-900">
+    <main class="min-h-screen px-6 py-8">
+      <div
+        class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md border mt-16"
+      >
+        <h2 class="text-2xl font-bold text-center text-emerald-600 mb-6">
+          Create an Account
+        </h2>
+        <p class="text-sm text-gray-600 text-center mb-6">
+          Choose your role to get started.
+        </p>
+
+        <% if (typeof error !== 'undefined' && error) { %>
+        <div
+          class="bg-red-100 border border-red-200 text-red-700 px-4 py-3 rounded mb-6 text-sm"
+        >
+          <%= error %>
+        </div>
+        <% } %>
+
+        <form action="/api/auth/register" method="POST">
+          <!-- Full Name -->
+          <div class="mb-5">
+            <label
+              for="name"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Full Name</label
+            >
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <!-- Username -->
+          <div class="mb-5">
+            <label
+              for="username"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Username</label
+            >
+            <input
+              type="text"
+              id="username"
+              name="username"
+              required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <!-- Password -->
+          <div class="mb-5">
+            <label
+              for="password"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Password</label
+            >
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <!-- Role Selection -->
+          <div class="mb-5">
+            <label class="block text-sm font-medium text-gray-700 mb-1"
+              >I am a</label
+            >
+            <div class="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onclick="setRole('citizen')"
+                class="py-2 px-3 border border-gray-300 rounded-lg text-sm font-medium bg-white hover:bg-gray-50"
+                id="citizen-btn"
+              >
+                🧑 Citizen
+              </button>
+              <button
+                type="button"
+                onclick="setRole('officer')"
+                class="py-2 px-3 border border-gray-300 rounded-lg text-sm font-medium bg-white hover:bg-gray-50"
+                id="officer-btn"
+              >
+                🏢 Officer
+              </button>
+              <button
+                type="button"
+                onclick="setRole('admin')"
+                class="py-2 px-3 border border-gray-300 rounded-lg text-sm font-medium bg-white hover:bg-gray-50"
+                id="admin-btn"
+              >
+                👨‍💼 Admin
+              </button>
+            </div>
+            <input type="hidden" name="role_id" id="role_id" value="1" />
+          </div>
+
+          <div class="mb-5 hidden" id="department-section">
+            <label
+              for="department_id"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Select Department</label
+            >
+            <select
+              id="department_id"
+              name="department_id"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            >
+              <option value="">Choose Department</option>
+              <option value="1">Interior</option>
+              <option value="2">Commerce</option>
+              <option value="3">Education</option>
+              <option value="4">Health</option>
+              <option value="5">Housing</option>
+            </select>
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-emerald-700 text-white py-2 rounded-lg font-semibold hover:bg-emerald-600 transition"
+          >
+            Create Account
+          </button>
+        </form>
+
+        <p class="mt-6 text-center text-sm text-gray-600">
+          Already have an account?
+          <a href="/login" class="text-emerald-600 hover:underline font-medium"
+            >Sign in</a
+          >
+        </p>
+      </div>
+    </main>
+
+    <!-- Script for Role Selection -->
+    <script>
+      function setRole(role) {
+        // Reset buttons
+        document
+          .getElementById('citizen-btn')
+          .classList.remove('bg-blue-100', 'text-blue-800')
+        document
+          .getElementById('officer-btn')
+          .classList.remove('bg-blue-100', 'text-blue-800')
+        document
+          .getElementById('admin-btn')
+          .classList.remove('bg-blue-100', 'text-blue-800')
+
+        // Highlight selected
+        document
+          .getElementById(`${role}-btn`)
+          .classList.add('bg-blue-100', 'text-blue-800')
+
+        const roleId = role === 'citizen' ? 1 : role === 'officer' ? 2 : 4
+        document.getElementById('role_id').value = roleId
+
+        const deptSection = document.getElementById('department-section')
+        if (role === 'officer') {
+          deptSection.classList.remove('hidden')
+
+          document.getElementById('department_id').value = '1'
+        } else {
+          deptSection.classList.add('hidden')
+          document.getElementById('department_id').value = ''
+        }
+      }
+
+      // Default: Citizen
+      setRole('citizen')
+    </script>
+  </body>
+</html>
